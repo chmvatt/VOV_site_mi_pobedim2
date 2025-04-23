@@ -369,7 +369,7 @@
     <a href="#svo">Липецк в СВО</a>
     <a href="#heroes">Герои</a>
     <a href="#facts">Факты</a>
-    <a href="https://chmvatt.github.io/VOV_site_mi_pobedim/" id="goHome" title="На главную">На&nbsp;главную</a>
+    <a href="https://chmvatt.github.io/VOV_site_mi_pobedim" id="goHome" title="На главную">На&nbsp;главную</a>
   </nav>
   <div class="preloader off">
       <span></span>
@@ -702,57 +702,26 @@
       }
       new Slider(document.querySelector('.battle-slider'));
     });
+    // Функция для "отлова" клика по ссылкам
+    document.addEventListener('DOMContentLoaded', function() {
+      const links = document.querySelectorAll('a:not([href*="javascript"]):not([href*="#"]):not(.fancybox):not([target]):not([data-fancybox])');
 
-        // Функция для "отлова" клика по ссылкам
-    document.addEventListener('DOMContentLoaded', () => {
-      const preloader = document.querySelector('.preloader');
-      if (!preloader) return;
-      const spans = Array.from(preloader.querySelectorAll('span'));
-      let isTransitioning = false;
-      const waitForAllTransitions = () => {
-        return new Promise(resolve => {
-          let done = 0;
-          const onEnd = e => {
-            if (e.propertyName === 'opacity') {
-              done++;
-              if (done === spans.length) {
-                resolve();
-              }
-            }
-          };
-          spans.forEach(span =>
-            span.addEventListener('transitionend', onEnd, { once: true })
-          );
-        });
-      };
-      const hidePreloader = async () => {
-        if (isTransitioning) return;
-        isTransitioning = true;
-        preloader.classList.remove('off');
-        preloader.classList.add('on');
-        await waitForAllTransitions();
-        preloader.remove();
-      };
-      const showPreloader = () => {
-        if (isTransitioning) return;
-        preloader.classList.remove('on');
-        preloader.classList.add('off');
-      };
-      window.addEventListener('load', hidePreloader);
-      const selector = [
-        'a[href]:not([href*="javascript"]):not([href^="#"])',
-        ':not(.fancybox)',
-        ':not([data-fancybox])',
-        ':not([target])'
-      ].join('');
-
-      document.querySelectorAll(selector).forEach(link => {
-        link.addEventListener('click', async e => {
+      links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
           e.preventDefault();
-          if (isTransitioning) return;
-          showPreloader();
-          await waitForAllTransitions();
-          window.location.href = link.href;
+          const preloader = document.querySelector('.preloader');
+
+          // Отображаем прелоадер
+          preloader.classList.remove('on');
+          preloader.classList.add('off');
+
+          // Берём адрес перехода
+          const url = this.getAttribute('href');
+
+          // Переход на страницу
+          setTimeout(function() {
+            window.location.href = url;
+          }, 550);
         });
       });
     });
